@@ -1,8 +1,5 @@
 name: build-deploy
   
-permissions:
-  packages: write
-
 on:
   release:
     types: [published]
@@ -10,7 +7,8 @@ on:
 jobs:
   build:
     runs-on: windows-latest
-
+    permissions:
+      packages: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
