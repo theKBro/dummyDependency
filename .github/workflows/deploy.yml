@@ -1,0 +1,25 @@
+name: build-deploy
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: |
+            8.0.x
+          config-file: nuget.config
+        env:
+          NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      - name: Build with dotnet
+        run: dotnet build -c Release
+      - name: Push generated package to GitHub registry
+        run: dotnet nuget push
