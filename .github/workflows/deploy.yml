@@ -6,20 +6,23 @@ on:
 
 jobs:
   build:
+    runs-on: windows-latest
+    permissions:
+        packages: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: recursive
       - name: Setup .NET Core
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: |
-            8.0.x
+          dotnet-version: '8.0.x'
           config-file: nuget.config
+          source-url: https://nuget.pkg.github.com/theKBro/index.json
         env:
           NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
       - name: Build with dotnet
         run: dotnet build -c Release
       - name: Push generated package to GitHub registry
-        run: dotnet nuget push
+        run: dotnet nuget push dummyDependency\bin\Release\*.nupkg
